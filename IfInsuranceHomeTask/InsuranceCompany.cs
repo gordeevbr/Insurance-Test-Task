@@ -8,6 +8,24 @@ namespace IfInsuranceHomeTask
 {
     public class InsuranceCompany : IInsuranceCompany
     {
+
+        private readonly string _Name;
+        private readonly Func<DateTime> _DateTimeProvider;
+
+        public InsuranceCompany(string Name, Func<DateTime> DateTimeProvider)
+        {
+            this._Name = Name;
+            this._DateTimeProvider = DateTimeProvider;
+        }
+
+        public InsuranceCompany(string Name): this(Name, () => DateTime.Now)
+        {
+        }
+
+        public InsuranceCompany(): this("Insurance Company")
+        {
+        }
+
         public IList<Risk> AvailableRisks
         {
             get
