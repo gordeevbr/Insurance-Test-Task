@@ -1,4 +1,4 @@
-A test insurance task.
+My solution for the testing task about an insurance company.
 
 IDE: VS2015 Community
 
