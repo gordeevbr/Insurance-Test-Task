@@ -133,6 +133,8 @@ namespace IfInsuranceHomeTask.Tests
         [Test]
         public void CannotSellAnEmptyPolicy()
         {
+            InsuranceCompany.AvailableRisks = GetMockRisks();
+
             Assert.Throws(typeof(EmptyPolicyException),
                 () => InsuranceCompany.SellPolicy("obj1", new DateTime(2018, 11, 5), 1, new List<Risk>()));
         }
@@ -274,6 +276,8 @@ namespace IfInsuranceHomeTask.Tests
         [Test]
         public void CannotAddARiskToANonExistantPolicyIfThereAreNoPolicies()
         {
+            InsuranceCompany.AvailableRisks = GetMockRisks();
+
             Assert.Throws(typeof(PolicyNotFoundException),
                 () => InsuranceCompany.AddRisk("obj1", GetMockRisks().First(), new DateTime(2018, 11, 5)));
         }
@@ -281,6 +285,8 @@ namespace IfInsuranceHomeTask.Tests
         [Test]
         public void CannotAddARiskToANonExistantPolicyIfTheObjectNameIsDifferent()
         {
+            InsuranceCompany.AvailableRisks = GetMockRisks();
+
             InsuranceCompany.SellPolicy("obj1", new DateTime(2018, 11, 5), 1, GetMockRisks());
 
             Assert.Throws(typeof(PolicyNotFoundException),
@@ -290,6 +296,8 @@ namespace IfInsuranceHomeTask.Tests
         [Test]
         public void CannotAddARiskToANonExistantPolicyIfTheDateIsInThePast()
         {
+            InsuranceCompany.AvailableRisks = GetMockRisks();
+
             InsuranceCompany.SellPolicy("obj1", new DateTime(2018, 11, 5), 1, GetMockRisks());
 
             Assert.Throws(typeof(PolicyDateException),
@@ -299,6 +307,8 @@ namespace IfInsuranceHomeTask.Tests
         [Test]
         public void CannotAddARiskToANonExistantPolicyIfTheDateIsBeforePolicyStart()
         {
+            InsuranceCompany.AvailableRisks = GetMockRisks();
+
             InsuranceCompany.SellPolicy("obj1", new DateTime(2018, 12, 5), 1, GetMockRisks());
 
             Assert.Throws(typeof(PolicyDateException),
@@ -308,6 +318,8 @@ namespace IfInsuranceHomeTask.Tests
         [Test]
         public void CannotAddARiskToANonExistantPolicyIfTheDateIsAfterPolicyEnd()
         {
+            InsuranceCompany.AvailableRisks = GetMockRisks();
+
             InsuranceCompany.SellPolicy("obj1", new DateTime(2018, 12, 5), 1, GetMockRisks());
 
             Assert.Throws(typeof(PolicyDateException),
@@ -356,6 +368,8 @@ namespace IfInsuranceHomeTask.Tests
         [Test]
         public void CannotRemoveARiskToANonExistantPolicyIfThereAreNoPolicies()
         {
+            InsuranceCompany.AvailableRisks = GetMockRisks();
+
             Assert.Throws(typeof(PolicyNotFoundException),
                 () => InsuranceCompany.RemoveRisk("obj1", GetMockRisks().First(), new DateTime(2018, 11, 5)));
         }
@@ -364,6 +378,8 @@ namespace IfInsuranceHomeTask.Tests
         public void CannotRemoveANonExistantRisk()
         {
             var risks = GetMockRisks();
+
+            InsuranceCompany.AvailableRisks = risks;
 
             InsuranceCompany.SellPolicy("obj1", new DateTime(2018, 11, 5), 13, risks.Take(2).ToList());
 
@@ -374,6 +390,8 @@ namespace IfInsuranceHomeTask.Tests
         [Test]
         public void CannotRemoveARiskFromANonExistantPolicyIfTheObjectNameIsDifferent()
         {
+            InsuranceCompany.AvailableRisks = GetMockRisks();
+
             InsuranceCompany.SellPolicy("obj1", new DateTime(2018, 11, 5), 1, GetMockRisks());
 
             Assert.Throws(typeof(PolicyNotFoundException),
@@ -383,6 +401,8 @@ namespace IfInsuranceHomeTask.Tests
         [Test]
         public void CannotRemoveARiskFromANonExistantPolicyIfTheDateIsInThePast()
         {
+            InsuranceCompany.AvailableRisks = GetMockRisks();
+
             InsuranceCompany.SellPolicy("obj1", new DateTime(2018, 11, 5), 1, GetMockRisks());
 
             Assert.Throws(typeof(PolicyDateException),
@@ -392,6 +412,8 @@ namespace IfInsuranceHomeTask.Tests
         [Test]
         public void CannotRemoveARiskFromANonExistantPolicyIfTheDateIsBeforePolicyStart()
         {
+            InsuranceCompany.AvailableRisks = GetMockRisks();
+
             InsuranceCompany.SellPolicy("obj1", new DateTime(2018, 12, 5), 1, GetMockRisks());
 
             Assert.Throws(typeof(PolicyDateException),
@@ -401,6 +423,8 @@ namespace IfInsuranceHomeTask.Tests
         [Test]
         public void CannotRemoveARiskFromANonExistantPolicyIfTheDateIsAfterPolicyEnd()
         {
+            InsuranceCompany.AvailableRisks = GetMockRisks();
+
             InsuranceCompany.SellPolicy("obj1", new DateTime(2018, 12, 5), 1, GetMockRisks());
 
             Assert.Throws(typeof(PolicyDateException),
@@ -412,6 +436,8 @@ namespace IfInsuranceHomeTask.Tests
         {
             var risks = GetMockRisks().Take(1).ToList();
             var risk = risks.First();
+
+            InsuranceCompany.AvailableRisks = risks;
 
             InsuranceCompany.SellPolicy("obj1", new DateTime(2019, 1, 1), 12, risks);
             InsuranceCompany.RemoveRisk("obj1", risk, new DateTime(2019, 2, 1));
@@ -425,6 +451,53 @@ namespace IfInsuranceHomeTask.Tests
             Assert.That(policy.Premium, Is.EqualTo(2));
             Assert.That(policy.ValidFrom, Is.EqualTo(new DateTime(2019, 1, 1)));
             Assert.That(policy.ValidTill, Is.EqualTo(new DateTime(2020, 1, 1)));
+        }
+
+        [Test]
+        public void CannotSellPolicyWithAnUnknownRisk()
+        {
+            var risks = GetMockRisks();
+
+            InsuranceCompany.AvailableRisks = risks.Take(2).ToList();
+
+            Assert.Throws(typeof(RiskNotFoundException),
+                () => InsuranceCompany.SellPolicy("obj1", new DateTime(2018, 11, 5), 1, risks.Skip(2).ToList()));
+        }
+
+        [Test]
+        public void CannotAddAnUnknownRiskToAPolicy()
+        {
+            var risks = GetMockRisks();
+
+            InsuranceCompany.AvailableRisks = risks.Take(2).ToList();
+            InsuranceCompany.SellPolicy("obj1", new DateTime(2018, 11, 5), 1, InsuranceCompany.AvailableRisks);
+
+            Assert.Throws(typeof(RiskNotFoundException),
+                () => InsuranceCompany.AddRisk("obj1", risks.Skip(2).ToList().First(), new DateTime(2018, 11, 5)));
+        }
+
+        [Test]
+        public void CannotRemoveAnUnknownRiskFromAPolicy()
+        {
+            var risks = GetMockRisks();
+
+            InsuranceCompany.AvailableRisks = risks.Take(2).ToList();
+            InsuranceCompany.SellPolicy("obj1", new DateTime(2018, 11, 5), 1, InsuranceCompany.AvailableRisks);
+
+            Assert.Throws(typeof(RiskNotFoundException),
+                () => InsuranceCompany.RemoveRisk("obj1", risks.Skip(2).ToList().First(), new DateTime(2018, 12, 5)));
+        }
+
+        [Test]
+        public void CannotRemoveARiskFromTheCompanyWhileItIsBeingUsed()
+        {
+            var risks = GetMockRisks();
+
+            InsuranceCompany.AvailableRisks = risks;
+            InsuranceCompany.SellPolicy("obj1", new DateTime(2018, 11, 5), 1, InsuranceCompany.AvailableRisks);
+
+            Assert.Throws(typeof(CannotChangeRisksException),
+                () => InsuranceCompany.AvailableRisks = risks.Skip(1).ToList());
         }
 
         private List<Risk> GetMockRisks()

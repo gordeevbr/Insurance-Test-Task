@@ -35,7 +35,7 @@ namespace IfInsuranceHomeTask
         {
             get
             {
-                throw new NotImplementedException();
+                return _Name;
             }
         }
 
