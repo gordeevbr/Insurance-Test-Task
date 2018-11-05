@@ -243,7 +243,7 @@ namespace IfInsuranceHomeTask.Tests
             InsuranceCompany.AvailableRisks = risks;
 
             InsuranceCompany.SellPolicy("obj1", new DateTime(2018, 11, 5), 13, risks.Take(2).ToList());
-            InsuranceCompany.AddRisk("obj1", risks.Skip(2).ToList().First(), new DateTime(2019, 1, 5));
+            InsuranceCompany.AddRisk("obj1", risks.Skip(2).First(), new DateTime(2019, 1, 5));
 
             var policy = InsuranceCompany.GetPolicy("obj1", new DateTime(2018, 11, 5));
 
@@ -311,7 +311,7 @@ namespace IfInsuranceHomeTask.Tests
 
             InsuranceCompany.SellPolicy("obj1", new DateTime(2018, 12, 5), 1, GetMockRisks());
 
-            Assert.Throws(typeof(PolicyDateException),
+            Assert.Throws(typeof(PolicyNotFoundException),
                 () => InsuranceCompany.AddRisk("obj1", GetMockRisks().First(), new DateTime(2018, 11, 5)));
         }
 
@@ -322,7 +322,7 @@ namespace IfInsuranceHomeTask.Tests
 
             InsuranceCompany.SellPolicy("obj1", new DateTime(2018, 12, 5), 1, GetMockRisks());
 
-            Assert.Throws(typeof(PolicyDateException),
+            Assert.Throws(typeof(PolicyNotFoundException),
                 () => InsuranceCompany.AddRisk("obj1", GetMockRisks().First(), new DateTime(2019, 2, 5)));
         }
 
@@ -338,7 +338,7 @@ namespace IfInsuranceHomeTask.Tests
 
             var policy = InsuranceCompany.GetPolicy("obj1", new DateTime(2018, 11, 5));
 
-            Assert.That(policy.InsuredRisks, Is.EqualTo(risks));
+            Assert.That(policy.InsuredRisks.Count, Is.EqualTo(2));
             Assert.That(policy.NameOfInsuredObject, Is.EqualTo("obj1"));
             Assert.That(policy.Premium, Is.EqualTo(5));
             Assert.That(policy.ValidFrom, Is.EqualTo(new DateTime(2018, 11, 5)));
@@ -357,7 +357,26 @@ namespace IfInsuranceHomeTask.Tests
 
             var policy = InsuranceCompany.GetPolicy("obj1", new DateTime(2018, 11, 5));
 
-            Assert.That(policy.InsuredRisks, Is.EqualTo(risks));
+            Assert.That(policy.InsuredRisks.Count, Is.EqualTo(2));
+            Assert.That(policy.NameOfInsuredObject, Is.EqualTo("obj1"));
+            Assert.That(policy.Premium, Is.EqualTo(6));
+            Assert.That(policy.ValidFrom, Is.EqualTo(new DateTime(2018, 11, 5)));
+            Assert.That(policy.ValidTill, Is.EqualTo(new DateTime(2019, 12, 5)));
+        }
+
+        [Test]
+        public void CanRemoveARiskForNoTimeAtAll()
+        {
+            var risks = GetMockRisks();
+
+            InsuranceCompany.AvailableRisks = risks;
+
+            InsuranceCompany.SellPolicy("obj1", new DateTime(2018, 11, 5), 13, risks.Take(2).ToList());
+            InsuranceCompany.RemoveRisk("obj1", risks.Take(1).First(), new DateTime(2018, 11, 5));
+
+            var policy = InsuranceCompany.GetPolicy("obj1", new DateTime(2018, 11, 5));
+
+            Assert.That(policy.InsuredRisks.Count, Is.EqualTo(2));
             Assert.That(policy.NameOfInsuredObject, Is.EqualTo("obj1"));
             Assert.That(policy.Premium, Is.EqualTo(4));
             Assert.That(policy.ValidFrom, Is.EqualTo(new DateTime(2018, 11, 5)));
@@ -379,12 +398,12 @@ namespace IfInsuranceHomeTask.Tests
         {
             var risks = GetMockRisks();
 
-            InsuranceCompany.AvailableRisks = risks;
+            InsuranceCompany.AvailableRisks = risks.Take(2).ToList();
 
             InsuranceCompany.SellPolicy("obj1", new DateTime(2018, 11, 5), 13, risks.Take(2).ToList());
 
             Assert.Throws(typeof(RiskNotFoundException),
-                () => InsuranceCompany.RemoveRisk("obj1", GetMockRisks().Skip(2).First(), new DateTime(2018, 12, 5)));
+                () => InsuranceCompany.RemoveRisk("obj1", risks.Skip(2).First(), new DateTime(2018, 12, 5)));
         }
 
         [Test]
@@ -416,7 +435,7 @@ namespace IfInsuranceHomeTask.Tests
 
             InsuranceCompany.SellPolicy("obj1", new DateTime(2018, 12, 5), 1, GetMockRisks());
 
-            Assert.Throws(typeof(PolicyDateException),
+            Assert.Throws(typeof(PolicyNotFoundException),
                 () => InsuranceCompany.RemoveRisk("obj1", GetMockRisks().First(), new DateTime(2018, 11, 5)));
         }
 
@@ -427,7 +446,7 @@ namespace IfInsuranceHomeTask.Tests
 
             InsuranceCompany.SellPolicy("obj1", new DateTime(2018, 12, 5), 1, GetMockRisks());
 
-            Assert.Throws(typeof(PolicyDateException),
+            Assert.Throws(typeof(PolicyNotFoundException),
                 () => InsuranceCompany.RemoveRisk("obj1", GetMockRisks().First(), new DateTime(2019, 2, 5)));
         }
 
