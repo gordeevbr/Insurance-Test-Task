@@ -8,7 +8,7 @@ using IfInsuranceHomeTask.Exceptions;
 namespace IfInsuranceHomeTask
 {
     /// <summary>
-    /// A default implementation of the InsuranceCompany.
+    /// A default implementation of IInsuranceCompany.
     /// This implementation is not intended to be thread-safe.
     /// </summary>
     public class InsuranceCompany : IInsuranceCompany
