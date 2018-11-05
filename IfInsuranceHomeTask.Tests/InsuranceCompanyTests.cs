@@ -63,7 +63,7 @@ namespace IfInsuranceHomeTask.Tests
             Assert.That(policy.NameOfInsuredObject, Is.EqualTo("obj1"));
             Assert.That(policy.Premium, Is.EqualTo(6));
             Assert.That(policy.ValidFrom, Is.EqualTo(new DateTime(2018, 11, 5)));
-            Assert.That(policy.ValidTill, Is.EqualTo(new DateTime(2018, 12, 5)));
+            Assert.That(policy.ValidTill, Is.EqualTo(new DateTime(2019, 1, 5)));
         }
 
         [Test]

@@ -8,5 +8,8 @@ namespace IfInsuranceHomeTask.Exceptions
 {
     public class RiskNotFoundException: ArgumentException
     {
+        public RiskNotFoundException(string message) : base(message)
+        {
+        }
     }
 }
