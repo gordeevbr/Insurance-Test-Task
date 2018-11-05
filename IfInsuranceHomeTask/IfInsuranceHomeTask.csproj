@@ -42,6 +42,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Exceptions\EmptyPolicyException.cs" />
+    <Compile Include="Exceptions\PolicyDateException.cs" />
+    <Compile Include="Exceptions\PolicyExistsException.cs" />
+    <Compile Include="Exceptions\PolicyNotFoundException.cs" />
+    <Compile Include="Exceptions\RiskNotFoundException.cs" />
     <Compile Include="IInsuranceCompany.cs" />
     <Compile Include="InsuranceCompany.cs" />
     <Compile Include="IPolicy.cs" />

@@ -12,18 +12,10 @@ namespace IfInsuranceHomeTask
         private readonly string _Name;
         private readonly Func<DateTime> _DateTimeProvider;
 
-        public InsuranceCompany(string Name, Func<DateTime> DateTimeProvider)
+        public InsuranceCompany(string Name = "Insurance Company", Func<DateTime> DateTimeProvider = null)
         {
             this._Name = Name;
-            this._DateTimeProvider = DateTimeProvider;
-        }
-
-        public InsuranceCompany(string Name): this(Name, () => DateTime.Now)
-        {
-        }
-
-        public InsuranceCompany(): this("Insurance Company")
-        {
+            this._DateTimeProvider = DateTimeProvider ?? DefaultDateTimeProvider;
         }
 
         public IList<Risk> AvailableRisks
@@ -65,6 +57,11 @@ namespace IfInsuranceHomeTask
         public IPolicy SellPolicy(string nameOfInsuredObject, DateTime validFrom, short validMonths, IList<Risk> selectedRisks)
         {
             throw new NotImplementedException();
+        }
+
+        private static DateTime DefaultDateTimeProvider()
+        {
+            return DateTime.Now;
         }
     }
 }
